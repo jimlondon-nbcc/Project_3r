@@ -1,0 +1,67 @@
+﻿@model Project_3r.Models.InvoiceDTO
+@{
+    ViewBag.Title = "Add/Edit an Invoice";
+}
+
+<h2>Add or Edit Invoice</h2>
+
+@using (Html.BeginForm("Upsert", "Invoice", FormMethod.Post))
+{
+    @Html.HiddenFor(i => i.Invoice.InvoiceID)
+    <datalist id="customersList">
+        @foreach (var customer in Model.Customers)
+        {
+            <option value="@customer.CustomerID - @customer.Name" />
+
+        }
+    </datalist>
+
+    <div class="row">
+        <div class="col-md-3">
+            <span>CustomerId - Customer Name</span>
+        </div>
+        <div class="col-md-9">
+            <input value="@Model.Invoice.CustomerID - @Model.Invoice.Customer.Name" type="text" list="customersList" class="form-control" name="Invoice_CustomerID" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <span>Invoice Date</span>
+        </div>
+        <div class="col-md-9">
+            @Html.TextBoxFor(i => i.Invoice.InvoiceDate, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <span>Product Total</span>
+        </div>
+        <div class="col-md-9">
+            <input value="@Model.Invoice.ProductTotal" readonly type="text" class="form-control" name="Invoice_CustomerID" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <span>CustomerId - Customer Name</span>
+        </div>
+        <div class="col-md-9">
+            <input value="@Model.Invoice.CustomerID - @Model.Invoice.Customer.Name" type="text" list="customersList" class="form-control" name="Invoice_CustomerID" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <span>CustomerId - Customer Name</span>
+        </div>
+        <div class="col-md-9">
+            <input value="@Model.Invoice.CustomerID - @Model.Invoice.Customer.Name" type="text" list="customersList" class="form-control" name="Invoice_CustomerID" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <span>CustomerId - Customer Name</span>
+        </div>
+        <div class="col-md-9">
+            <input value="@Model.Invoice.CustomerID - @Model.Invoice.Customer.Name" type="text" list="customersList" class="form-control" name="Invoice_CustomerID" />
+        </div>
+    </div>
+}

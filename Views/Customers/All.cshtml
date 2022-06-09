@@ -1,0 +1,49 @@
+﻿@model List<Project_3r.Models.Customer>
+@{
+    ViewBag.Title = "All Customers";
+}
+
+<div class="pageTop">
+    <h2>All Customers</h2>
+    @*<a href="/Customers/Upsert">Add New Customer</a>*@
+</div>
+<div class="row searchArea">
+    <div class="col-md-4 searchBoxArea">
+        <input id="txtSearch" type="text" class="form-control" />
+    </div>
+    <div class="col-md-8 searchBtnArea">
+        <input type="button" id="btnSearch" class="btn btn-info" value="Search" onclick="CurrentPage.Search();">
+        <div class="searchMsg small">Search by Customer Name, Email, Phone, or Province.</div>
+    </div>
+</div>
+
+<table id="tblCustomers" class="table table-hover">
+    <thead>
+        <tr>
+            <th onclick="CurrentPage.Sort(0)">Customer ID</th>
+            <th onclick="CurrentPage.Sort(1)">Name</th>
+            <th onclick="CurrentPage.Sort(2)">City</th>
+            <th onclick="CurrentPage.Sort(3)">State</th>
+            <th onclick="CurrentPage.Sort(4)">ZipCode</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var customer in Model)
+        {
+            <tr>
+                <td>@customer.CustomerID</td>
+                <td>@customer.Name</td>
+                <td>@customer.City</td>
+                <td>@customer.State</td>
+                <td>@customer.ZipCode</td>
+                @*<td><a href="/Customers/Upsert/@customer.CustomerID">Edit</a></td>*@
+            </tr>
+        }
+    </tbody>
+</table>
+<script>
+    window.onload = function () {
+        CurrentPage.baseUrl = '/Customers/All/';
+    }
+</script>

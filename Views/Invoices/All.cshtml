@@ -1,0 +1,49 @@
+﻿@model List<Project_3r.Models.Invoice>
+@{
+    ViewBag.Title = "All Invoices";
+}
+
+<div class="pageTop">
+    <h2>All Invoices</h2>
+    @*<a href="/Invoices/Upsert">Add New Invoice</a>*@
+</div>
+<div class="row searchArea">
+    <div class="col-md-4 searchBoxArea">
+        <input id="txtSearch" type="text" class="form-control" />
+    </div>
+    <div class="col-md-8 searchBtnArea">
+        <input type="button" id="btnSearch" class="btn btn-info" value="Search" onclick="CurrentPage.Search();">
+        <div class="searchMsg small">Search by Customer Name, Customer Id, or Date.</div>
+    </div>
+</div>
+
+<table id="tblCustomers" class="table table-hover">
+    <thead>
+        <tr>
+            <th onclick="CurrentPage.Sort(0)">Invoice ID</th>
+            <th onclick="CurrentPage.Sort(1)">Customer ID</th>
+            <th onclick="CurrentPage.Sort(2)">Date</th>
+            <th onclick="CurrentPage.Sort(3)">Total</th>
+            <th onclick="CurrentPage.Sort(4)"># LineItems</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var invoice in Model)
+        {
+        <tr>
+            <td>@invoice.InvoiceID</td>
+            <td>@invoice.CustomerID - @invoice.Customer.Name</td>
+            <td>@invoice.InvoiceDate</td>
+            <td>@invoice.InvoiceTotal</td>
+            <td>@invoice.InvoiceLineItems.Count</td>
+            <td><a href="/Invoices/Upsert/@invoice.InvoiceID">Edit</a></td>
+        </tr>
+        }
+    </tbody>
+</table>
+<script>
+    window.onload = function () {
+        CurrentPage.baseUrl = '/Invoices/All/';
+    }
+</script>

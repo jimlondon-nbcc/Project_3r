@@ -1,0 +1,120 @@
+﻿body {
+    font-family: Verdana, Geneva, Tahoma, sans-serif
+}
+
+a {
+    text-decoration: none;
+}
+
+footer {
+    font-weight: bold;
+}
+
+th:hover {
+    cursor: pointer;
+}
+
+footer span {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: large;
+}
+
+label {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+    label input, label textarea {
+        font-weight: normal;
+    }
+
+    label select {
+        font-weight: normal;
+    }
+
+    label span, .caution span {
+        font-weight: normal;
+        color: red;
+    }
+
+.border {
+    border: thin black solid;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+    .wrapper ul {
+        list-style-type: square;
+    }
+
+.imgWrapper {
+    margin: 0px 50px;
+    width: 40%;
+}
+
+.homepageImage {
+    width: 100%;
+}
+
+.textContainer {
+    font-family: Monaco, monospace;
+    margin-right: 50px;
+    width: 60%;
+}
+
+.pageTop {
+    margin-bottom: 20px
+}
+
+    .pageTop a {
+        font-weight: bold;
+    }
+
+.searchArea {
+    margin-bottom: 20px;
+}
+
+.searchBtnArea {
+    display: flex;
+    flex-direction: row;
+    margin-top: 5px;
+}
+
+.searchBoxArea {
+    margin-top: 5px;
+}
+
+.searchMsg {
+    margin-left: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.formArea {
+    display: flex;
+    flex-direction: column;
+}
+
+.caution {
+    font-weight: bold;
+    color: grey;
+    margin-top: 25px;
+}
+
+.bold {
+    font-weight: bold;
+    font-family: Verdana, Geneva, Tahoma, sans-serif
+}
+
+.mono {
+    font-family: Monaco, monospace;
+}
+
+.italix {
+    font-style: italic;
+}
