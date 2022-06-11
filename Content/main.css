@@ -48,9 +48,9 @@ label {
     justify-content: center;
 }
 
-    .wrapper ul {
-        list-style-type: square;
-    }
+.wrapper ul {
+    list-style-type: square;
+}
 
 .imgWrapper {
     margin: 0px 50px;
@@ -71,9 +71,9 @@ label {
     margin-bottom: 20px
 }
 
-    .pageTop a {
-        font-weight: bold;
-    }
+.pageTop a {
+    font-weight: bold;
+}
 
 .searchArea {
     margin-bottom: 20px;
@@ -117,4 +117,10 @@ label {
 
 .italix {
     font-style: italic;
+}
+.marginate{
+    margin-top: 10px;
+}
+.highlight {
+    color: #5bc0de;
 }

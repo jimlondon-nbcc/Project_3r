@@ -4,8 +4,8 @@
 }
 
 <h2>Add or Edit Invoice</h2>
-
-@using (Html.BeginForm("Upsert", "Invoice", FormMethod.Post))
+@*THIS FORM IS TO SUBMIT AN INVOICE ONLY*@
+@using (Html.BeginForm("Upsert", "Invoices", FormMethod.Post))
 {
     @Html.HiddenFor(i => i.Invoice.InvoiceID)
     <datalist id="customersList">
@@ -21,15 +21,16 @@
             <span>CustomerId - Customer Name</span>
         </div>
         <div class="col-md-9">
-            <input value="@Model.Invoice.CustomerID - @Model.Invoice.Customer.Name" type="text" list="customersList" class="form-control" name="Invoice_CustomerID" />
-        </div>
+            <input value="@Model.Invoice.CustomerID - @Model.Invoice.Customer.Name" type="text"
+                   list="customersList" class="form-control required" name="customerId" /> @*Send the customerId param to controller*@
+            </div>
     </div>
     <div class="row">
         <div class="col-md-3">
             <span>Invoice Date</span>
         </div>
         <div class="col-md-9">
-            @Html.TextBoxFor(i => i.Invoice.InvoiceDate, new { @class = "form-control" })
+            @Html.TextBoxFor(i => i.Invoice.InvoiceDate, new { @class = "form-control date required" })
         </div>
     </div>
     <div class="row">
@@ -37,31 +38,86 @@
             <span>Product Total</span>
         </div>
         <div class="col-md-9">
-            <input value="@Model.Invoice.ProductTotal" readonly type="text" class="form-control" name="Invoice_CustomerID" />
+            <input value='@Model.Invoice.ProductTotal.ToString("0.00")' readonly type="text" class="form-control" name="Invoice_ProductTotal" />
         </div>
     </div>
     <div class="row">
         <div class="col-md-3">
-            <span>CustomerId - Customer Name</span>
+            <span>Shipping</span>
         </div>
         <div class="col-md-9">
-            <input value="@Model.Invoice.CustomerID - @Model.Invoice.Customer.Name" type="text" list="customersList" class="form-control" name="Invoice_CustomerID" />
+            <input value="@Model.Invoice.Shipping.ToString("0.00")" readonly type="text" class="form-control" name="Invoice_Shipping" />
         </div>
     </div>
     <div class="row">
         <div class="col-md-3">
-            <span>CustomerId - Customer Name</span>
+            <span>Sales Tax</span>
         </div>
         <div class="col-md-9">
-            <input value="@Model.Invoice.CustomerID - @Model.Invoice.Customer.Name" type="text" list="customersList" class="form-control" name="Invoice_CustomerID" />
+            <input value="@Model.Invoice.SalesTax.ToString("0.00")" readonly type="text" class="form-control" name="Invoice_SalesTax" />
         </div>
     </div>
     <div class="row">
         <div class="col-md-3">
-            <span>CustomerId - Customer Name</span>
+            <span>Invoice Total</span>
         </div>
         <div class="col-md-9">
-            <input value="@Model.Invoice.CustomerID - @Model.Invoice.Customer.Name" type="text" list="customersList" class="form-control" name="Invoice_CustomerID" />
+            <input value="@Model.Invoice.InvoiceTotal.ToString("0.00")" readonly type="text" class="form-control" name="Invoice_InvoiceTotal" />
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-12 marginate">
+            <input type="submit" value="Create/Save Invoice" class="btn btn-info" onclick="return CurrentPage.Check()" />
+            <a href="/Invoices/All/" class="btn btn-primary">Return to All Invoices</a>
+            <p class="small bold marginate">Note: Clicking <span class="highlight">Create/Save Invoice</span> will update Totals if you have added or removed
+             Line Items.</p>
+        </div>
+    </div>
+    <hr />
+    <h4>Invoice Line Items</h4>
+    }
+
+@*this should be visible only if  not starting a new invoice*@
+@if(@Model.Invoice.InvoiceID == 0)
+{
+<p class="bold marginate">You must Create a blank invoice before adding Line Items</p>
 }
+else
+{
+<a class="bold marginate" href="/InvoiceLineItems/Upsert/?invoiceId=@Model.Invoice.InvoiceID&productCode=0">Add New</a>
+
+foreach (var lineItem in Model.Invoice.InvoiceLineItems)
+    {
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="row">
+                    <table class="table">
+                        <tr>
+                            <th>Product Code</th>
+                            <th>Unit Price</th>
+                            <th>Quantity</th>
+                            <th>Item Total</th>
+                            <th>Actions</th>
+                        </tr>
+                        <tr>
+                            <td>@lineItem.ProductCode</td>
+                            <td>@lineItem.UnitPrice.ToString("0.00")</td>
+                            <td>@lineItem.Quantity</td>
+                            <td>@lineItem.ItemTotal.ToString("0.00")</td>
+                            <td><a href="/InvoiceLineItems/Upsert/?invoiceId=@Model.Invoice.InvoiceID&productCode=@lineItem.ProductCode">Edit</a>
+                            <a href="#" 
+                                   onclick="api.DELETE('/InvoiceLineItems/Delete/?invoiceId=@Model.Invoice.InvoiceID&productCode=@lineItem.ProductCode')">Delete</a></td>
+                        </tr>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    }
+}
+
+<script>
+    window.onload = function () {
+        CurrentPage.FixDates("/");
+    }
+</script>

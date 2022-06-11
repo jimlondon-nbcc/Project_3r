@@ -5,7 +5,7 @@
 
 <div class="pageTop">
     <h2>All Invoices</h2>
-    @*<a href="/Invoices/Upsert">Add New Invoice</a>*@
+    <a href="/Invoices/Upsert">Add New Invoice</a>
 </div>
 <div class="row searchArea">
     <div class="col-md-4 searchBoxArea">
@@ -34,10 +34,13 @@
         <tr>
             <td>@invoice.InvoiceID</td>
             <td>@invoice.CustomerID - @invoice.Customer.Name</td>
-            <td>@invoice.InvoiceDate</td>
-            <td>@invoice.InvoiceTotal</td>
+            <td>@invoice.InvoiceDate.ToShortDateString()</td>
+            <td>@invoice.InvoiceTotal.ToString("c")</td>
             <td>@invoice.InvoiceLineItems.Count</td>
-            <td><a href="/Invoices/Upsert/@invoice.InvoiceID">Edit</a></td>
+            <td><a href="/Invoices/Upsert/@invoice.InvoiceID">Edit</a>
+                <a href="#" onclick="api.DELETE('/Invoices/Delete/@invoice.InvoiceID')">Delete</a>
+            </td>
+            
         </tr>
         }
     </tbody>
@@ -45,5 +48,6 @@
 <script>
     window.onload = function () {
         CurrentPage.baseUrl = '/Invoices/All/';
+
     }
 </script>

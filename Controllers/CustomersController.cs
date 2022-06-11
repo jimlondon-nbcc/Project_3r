@@ -1,7 +1,11 @@
 ﻿using Project_3r.Models;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data.Entity.Migrations;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 
@@ -87,5 +91,94 @@ namespace Project_3r.Controllers
             customers = customers.Where(c => c.IsDeleted == false).ToList();
             return View(customers);
         }
+        /// <summary>
+        ///     Returns a customer for update, or creates a new customer to add
+        /// </summary>
+        /// <param name="id">Id of the customer to create/edit</param>
+        /// <returns>View</returns>
+        [HttpGet]
+        public ActionResult Upsert(int id = 0)
+        {
+            BooksEntities context = new BooksEntities();
+            //If no customer in db, create new instance of customer
+
+            Customer customer = context.Customers.Where(c => c.CustomerID == id).FirstOrDefault();
+            List<State> states = context.States.ToList();
+            
+            if(customer == null) 
+            {
+                customer = new Customer();
+            }
+
+            CustomerDTO dto = new CustomerDTO()
+            {
+                Customer = customer,
+                States = states
+            };
+
+            //make sure that data for deleted customers is not visible
+            if (customer.IsDeleted)
+            {
+                return RedirectToAction("All");
+            }
+
+            return View(dto);
+        }
+        /// <summary>
+        ///     HttpPost to submit data to db for new customer or update
+        /// </summary>
+        /// <param name="customer">The customer to add/update</param>
+        /// <returns>Redirect to All Customers View</returns>
+        [HttpPost]
+        public ActionResult Upsert(CustomerDTO customerDTO)
+        {
+            Customer customer = customerDTO.Customer;            
+            BooksEntities context = new BooksEntities();
+
+            try
+            {
+                context.Customers.AddOrUpdate(customer);
+                context.SaveChanges(); 
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return RedirectToAction("All");
+        }
+        /// <summary>
+        ///     HttpGet to delete a customer
+        /// </summary>
+        /// <param name="id">The Id of the customer to delete</param>
+        /// <returns>Redirect to All Customers View</returns>
+        [HttpGet]
+        public ActionResult Delete(string id)
+        {
+            BooksEntities context = new BooksEntities();
+
+            if (int.TryParse(id, out int customerId))
+            {
+                try
+                {
+                    Customer customer = context.Customers.Where(c => c.CustomerID == customerId).FirstOrDefault();
+                    customer.IsDeleted = true;
+
+                    context.SaveChanges();
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+
+            }
+
+            return RedirectToAction("All");
+        }
+        /// <summary>
+        ///     Function called by Upsert to send a welcome Email to new customers
+        /// </summary>
+        /// <param name="newCustomer">The customer to send an Email to</param>
+
     }
 }

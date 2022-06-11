@@ -10,6 +10,11 @@ namespace Project_3r.Controllers
 {
     public class InvoicesController : Controller
     {
+        //Constants to use during calculations
+        const decimal SALES_TAX_RATE = 0.075m;
+        const decimal FIRST_BOOK_SHIP_RATE = 3.75m;
+        const decimal ADDITIONAL_BOOK_SHIP_RATE = 1.25m;
+        
         // GET: Invoices
         /// <summary>
         ///     Creates view for All Invoices (with sorting)
@@ -38,9 +43,9 @@ namespace Project_3r.Controllers
                 case 2:
                     {
                         if (isDesc)
-                            invoices = context.Invoices.OrderByDescending(s => s.InvoiceDate.ToShortDateString()).ToList();
+                            invoices = context.Invoices.OrderByDescending(s => s.InvoiceDate).ToList();
                         else
-                            invoices = context.Invoices.OrderBy(s => s.InvoiceDate.ToShortDateString()).ToList();
+                            invoices = context.Invoices.OrderBy(s => s.InvoiceDate).ToList();
 
                         break;
                     }
@@ -53,7 +58,15 @@ namespace Project_3r.Controllers
 
                         break;
                     }
+                case 4:
+                    {
+                        if (isDesc)
+                            invoices = context.Invoices.OrderByDescending(s => s.InvoiceLineItems.Count).ToList();
+                        else
+                            invoices = context.Invoices.OrderBy(s => s.InvoiceLineItems.Count).ToList();
 
+                        break;
+                    }
                 default:
                     {
                         if (isDesc)
@@ -74,19 +87,19 @@ namespace Project_3r.Controllers
                 {
                     invoices = invoices.Where(s =>
                         s.CustomerID == idLookup ||
-                        s.InvoiceID == idLookup
+                        s.InvoiceID == idLookup ||
+                        s.InvoiceDate.ToShortDateString().ToLower().Contains(id)
                     ).ToList();
                 }
                 else // if id doesn't parse as an int
                 {
                     invoices = invoices.Where(s =>
-                    s.InvoiceDate.ToShortDateString().ToLower().Contains(id)
-                    || s.Customer.Name.ToLower().Contains(id)
+                    s.Customer.Name.ToLower().Contains(id)
                     ).ToList();
                 }
 
             }
-
+            invoices = invoices.Where(s => s.IsDeleted == false).ToList();
             return View(invoices);
         }
 
@@ -101,7 +114,18 @@ namespace Project_3r.Controllers
             BooksEntities context = new BooksEntities();
             Invoice invoice = context.Invoices.Where(e => e.InvoiceID == id).FirstOrDefault();
 
-            if (invoice == null) { invoice = new Invoice(); }
+            if (invoice == null) 
+            {
+                invoice = new Invoice();
+                invoice.Customer = new Customer();
+                invoice.InvoiceDate = DateTime.Now;
+            }
+
+            //Ensure deleted invoices aren't visible
+            if (invoice.IsDeleted)
+            {
+                return RedirectToAction("All");
+            }
 
             InvoiceDTO dto = new InvoiceDTO()
             {
@@ -120,27 +144,93 @@ namespace Project_3r.Controllers
         /// <param name="invoiceDTO">The InvoiceDTO being posted</param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult Upsert(InvoiceDTO invoiceDTO, string customerId)
-        {
+        public ActionResult Upsert(InvoiceDTO invoiceDTO, string customerId)        {
+            
             try
             {
                 int iCustomerId = Convert.ToInt32(customerId.Split('-')[0].Trim());
-                invoiceDTO.Invoice.CustomerID = iCustomerId;
+                
+                //Match invoice from db with customerId
+                invoiceDTO.Invoice.CustomerID = iCustomerId;                
 
+                //Calculate totals, tax, shipping
+                Invoice invoiceToUpdate = CalculateInvoiceTotals(invoiceDTO.Invoice);
                 
                 BooksEntities context = new BooksEntities();
-                Invoice invoiceToUpdate = context.Invoices.Where(e => e.InvoiceID == invoiceDTO.Invoice.InvoiceID).FirstOrDefault();
 
-                context.Invoices.AddOrUpdate(invoiceDTO.Invoice);
+                //Already have invoice match, so we don't need this:
+                //invoiceToUpdate = context.Invoices.Where(e => e.InvoiceID == invoiceDTO.Invoice.InvoiceID).FirstOrDefault();
 
-                return RedirectToAction("All");
+                context.Invoices.AddOrUpdate(invoiceToUpdate);
+                context.SaveChanges();
+
+                return Redirect("/Invoices/Upsert/" + invoiceToUpdate.InvoiceID.ToString());
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
 
+        }
+        /// <summary>
+        ///     HttpGet to delete an invoice
+        /// </summary>
+        /// <param name="id">The Id of the invoice to delete</param>
+        /// <returns>Redirect to All Invoices View</returns>
+        [HttpGet]
+        public ActionResult Delete(string id)
+        {
+            BooksEntities context = new BooksEntities();
+
+            if (int.TryParse(id, out int invoiceId))
+            {
+                try
+                {
+                    Invoice invoice = context.Invoices.Where(s => s.InvoiceID == invoiceId).FirstOrDefault();
+                    invoice.IsDeleted = true;
+
+                    context.SaveChanges();
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+
+            }
+            
+            return RedirectToAction("All");
+        }
+        /// <summary>
+        /// Called by upsert to calculate/recalculate the totals of the line items + tax, shipping
+        /// </summary>
+        /// <param name="invoice">The invoice object being updated</param>
+        /// <returns>Invoice object</returns>
+        public Invoice CalculateInvoiceTotals(Invoice invoice)
+        {
+            BooksEntities context = new BooksEntities();
+
+            List<InvoiceLineItem> lineItems = context.InvoiceLineItems.Where(i => i.InvoiceID == invoice.InvoiceID).ToList();
+
+            invoice.InvoiceTotal = 0;
+            foreach(var lineItem in lineItems)
+            {
+                invoice.ProductTotal += lineItem.ItemTotal;
+            }
+            //Calculate shipping and tax based on number of line items
+            if(lineItems.Count > 0)
+            {
+                invoice.Shipping = FIRST_BOOK_SHIP_RATE + ((lineItems.Count - 1) * ADDITIONAL_BOOK_SHIP_RATE);
+            } else
+            {
+                invoice.Shipping = 0;
+            }
+            
+            invoice.SalesTax = (invoice.ProductTotal + invoice.Shipping) * SALES_TAX_RATE;
+            
+            //Update the total
+            invoice.InvoiceTotal = invoice.ProductTotal + invoice.Shipping + invoice.SalesTax;
+
+            return invoice;
         }
     }
 }

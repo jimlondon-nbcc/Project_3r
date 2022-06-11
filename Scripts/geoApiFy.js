@@ -206,6 +206,7 @@ addressAutocomplete(document.getElementById("autocomplete-container"), (data) =>
     document.querySelector("#customerAddress").value = data.properties.address_line1;
     document.querySelector("#customerCity").value = data.properties.city;
     document.querySelector("#customerState").value = data.properties.state;
+    document.querySelector("#customerCode").value = data.properties.state_code;
     document.querySelector("#customerCountry").value = data.properties.country;
     document.querySelector("#customerPostal").value = data.properties.postcode;
 }, {

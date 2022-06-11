@@ -65,12 +65,13 @@
      * from going forward if they are not all filled
      * */
     Check() {
-        let infoArray = document.querySelectorAll(".upsertInfo");
+        let infoArray = document.querySelectorAll(".required");
 
         let flag = true;
 
         for (let i = 0; i < infoArray.length; i++) {
-            if (!infoArray[i].value) {
+            if (!infoArray[i].value ||
+                infoArray[i].value.substring(0, 1) === "0") {
                 flag = false;
                 break;
             }
@@ -86,6 +87,7 @@
 let api = {
     DELETE(url) {
         if (confirm("Are you sure you want to delete?")) {
+
             $.ajax({
                 url: url,
                 type: 'GET',
@@ -93,6 +95,8 @@ let api = {
                     debugger;
                 }
             });
+            location.reload();
+
         } else {
             alert("Delete canceled.")
         }

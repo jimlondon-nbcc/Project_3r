@@ -5,7 +5,7 @@
 
 <div class="pageTop">
     <h2>All Customers</h2>
-    @*<a href="/Customers/Upsert">Add New Customer</a>*@
+    <a href="/Customers/Upsert">Add New Customer</a>
 </div>
 <div class="row searchArea">
     <div class="col-md-4 searchBoxArea">
@@ -37,7 +37,10 @@
                 <td>@customer.City</td>
                 <td>@customer.State</td>
                 <td>@customer.ZipCode</td>
-                @*<td><a href="/Customers/Upsert/@customer.CustomerID">Edit</a></td>*@
+                <td>
+                    <a href="/Customers/Upsert/@customer.CustomerID">Edit</a>
+                    <a href="#" onclick="api.DELETE('/Customers/Delete/@customer.CustomerID')">Delete</a>
+                </td>
             </tr>
         }
     </tbody>

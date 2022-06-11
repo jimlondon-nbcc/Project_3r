@@ -1,0 +1,73 @@
+﻿@model Project_3r.Models.CustomerDTO
+@{
+    ViewBag.Title = "Add/Edit a Customer";
+}
+
+<h2>Add or Edit Customer</h2>
+<script defer src="~/Scripts/upsertCustomer.js"></script>
+@using (Html.BeginForm("Upsert", "Customers", FormMethod.Post))
+{
+    @Html.HiddenFor(i => i.Customer.CustomerID)
+    <datalist id="statesList">
+        @foreach (var state in Model.States)
+        {
+            <option value="@state.StateCode" />
+
+        }
+    </datalist>
+
+
+    <div class="row">
+        <div class="col-md-3">
+            <span>Customer Name</span>
+        </div>
+        <div class="col-md-9">
+            @Html.TextBoxFor(i => i.Customer.Name, new { @class = "form-control required" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <span>Street Address</span>
+        </div>
+        <div class="col-md-9">
+            @Html.TextBoxFor(i => i.Customer.Address, new { @class = "form-control required" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <span>City</span>
+        </div>
+        <div class="col-md-9">
+            @Html.TextBoxFor(i => i.Customer.City, new { @class = "form-control required" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <span>Zip Code</span>
+        </div>
+        <div class="col-md-9">
+            @Html.TextBoxFor(i => i.Customer.ZipCode, new { @class = "form-control required" })
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
+            <span>State</span>
+        </div>
+        <div class="col-md-9">
+            <input type="text" id="stateSelector" list="statesList" class="form-control required" name="Customer.State" placeholder="Select State" />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 marginate">
+            <input type="submit" value="Save" class="btn btn-info" onclick="return CurrentPage.Check()" />
+            <a href="/Customers/All/" class="btn btn-primary">Cancel</a>
+        </div>
+    </div>
+
+    @Html.HiddenFor(gm => gm.Customer.State);
+
+}
+
+

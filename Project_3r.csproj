@@ -128,13 +128,17 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\CustomersController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\InvoiceLineItemsController.cs" />
     <Compile Include="Controllers\InvoicesController.cs" />
+    <Compile Include="Controllers\ProductsController.cs" />
+    <Compile Include="Controllers\StatesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Customer.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\CustomerDTO.cs" />
     <Compile Include="Models\Invoice.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -142,6 +146,7 @@
     <Compile Include="Models\InvoiceLineItem.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\InvoiceLineItemDTO.cs" />
     <Compile Include="Models\Model1.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -211,6 +216,8 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\main.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\upsertCustomer.js" />
+    <Content Include="Scripts\upsertLineItem.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -228,6 +235,12 @@
     <Content Include="Views\Customers\All.cshtml" />
     <Content Include="Views\Invoices\All.cshtml" />
     <Content Include="Views\Invoices\Upsert.cshtml" />
+    <Content Include="Views\InvoiceLineItems\Upsert.cshtml" />
+    <Content Include="Views\Customers\Upsert.cshtml" />
+    <Content Include="Views\Products\All.cshtml" />
+    <Content Include="Views\Products\Upsert.cshtml" />
+    <Content Include="Views\States\All.cshtml" />
+    <Content Include="Views\States\Upsert.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

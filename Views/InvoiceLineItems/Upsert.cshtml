@@ -1,0 +1,72 @@
+﻿@model Project_3r.Models.InvoiceLineItemDTO
+@{
+    ViewBag.Title = "Upsert Invoice Line Items";
+}
+
+<h2>Add or Edit Invoice Line Item</h2>
+<script defer src="~/Scripts/upsertLineItem.js"></script>
+
+@using (Html.BeginForm("Upsert", "InvoiceLineItems", FormMethod.Post))
+{
+    @Html.HiddenFor(i => i.InvoiceLineItem.InvoiceID)
+    <div class="row">
+        <div class="col-md-3">
+            <span>Product Code - Product</span>
+        </div>
+        <div class="col-md-9">
+            @if (Model.InvoiceLineItem.ProductCode == null)
+            {
+                <select id="productSelector" name="InvoiceLineItem.ProductCode" class="form-control required">
+                    <option value="" disabled selected>Please Select</option>
+                    @foreach (var product in Model.Products)
+                    {
+                        <option value="@product.ProductCode">
+                            @product.ProductCode - @product.Description - @product.UnitPrice.ToString("c")
+                        </option>
+                    }
+                </select>
+            }
+            else
+            {
+             <input id="productSelector" value='@Model.InvoiceLineItem.ProductCode' readonly type="text" class="form-control" name="InvoiceLineItem.ProductCode" />
+            }
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <span>Unit Price</span>
+        </div>
+        <div class="col-md-9">
+            @if (Model.InvoiceLineItem.ProductCode == null)
+            {
+                <div id="activeProduct">
+                    <input id="unitPrice"value="Select a Book" readonly type="text" class="form-control" name="InvoiceLineItem.UnitPrice" />
+                </div>
+                
+            }
+            else
+            {
+                <input value="@Model.InvoiceLineItem.Product.UnitPrice.ToString("0.00")" readonly type="text" class="form-control required" name="InvoiceLineItem.UnitPrice" />
+            }
+            @*<button type="button" id="btnGetPrice">Get Price</button>*@
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <span>Quantity</span>
+        </div>
+        <div class="col-md-9">
+            @Html.TextBoxFor(i => i.InvoiceLineItem.Quantity, new { @class = "form-control required" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 marginate">
+            <input type="submit" value="Save" class="btn btn-info" onclick="return CurrentPage.Check()" />
+            <a href="/Invoices/Upsert/@Model.InvoiceLineItem.InvoiceID" class="btn btn-primary">
+                Cancel
+            </a>
+            <p class="small marginate">Clicking <span class="highlight">Save</span> will automatically update the Unit Price, calculate the Total, and Save this Line Item</p>
+        </div>
+    </div>
+}
+

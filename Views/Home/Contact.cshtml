@@ -1,18 +1,19 @@
 ﻿@{
-    ViewBag.Title = "Fun with GeoApiFy";
+    ViewBag.Title = "GeoApiFy";
 }
-<h2>@ViewBag.Title.</h2>
-<h3>@ViewBag.Message</h3>
+<h2>@ViewBag.Title</h2>
+<h3>Customer Address Lookup Tool</h3>
 <script defer src="~/Scripts/geoApiFy.js"></script>
 <link rel="stylesheet" href="~/Content/Geo.css" />
 
 <div class="autocomplete-container" id="autocomplete-container"></div>
 
-<input type="text" disabled class="form-control" id="customerAddress" name="Model.Customer.Address" value="Address from db" />
-<input type="text" disabled class="form-control" id="customerCity" name="Model.Customer.City" value="City from db" />
-<input type="text" disabled class="form-control" id="customerState" name="Model.Customer.State" value="State/Prov from db" />
-<input type="text" disabled class="form-control" id="customerCountry" name="Model.Customer.Country" value="Country from db" />
-<input type="text" disabled class="form-control" id="customerPostal" name="Model.Customer.Country" value="Postal from db" />
+<input type="text" disabled class="form-control" id="customerAddress" name="Model.Customer.Address" value="Address" />
+<input type="text" disabled class="form-control" id="customerCity" name="Model.Customer.City" value="City" />
+<input type="text" disabled class="form-control" id="customerState" name="Model.Customer.State" value="State/Prov" />
+<input type="text" disabled class="form-control" id="customerCode" name="Model.Customer.StateCode" value="State/Prov Code" />
+<input type="text" disabled class="form-control" id="customerCountry" name="Model.Customer.Country" value="Country" />
+<input type="text" disabled class="form-control" id="customerPostal" name="Model.Customer.Country" value="Postal/Zip" />
 
 <style>
 </style>

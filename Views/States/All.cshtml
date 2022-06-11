@@ -1,0 +1,50 @@
+﻿@model List<Project_3r.Models.State>
+@{
+    ViewBag.Title = "All States";
+}
+
+<div class="pageTop">
+    <h2>All States</h2>
+    <a href="/States/Upsert">Add New State</a>
+</div>
+<div class="row searchArea">
+    <div class="col-md-4 searchBoxArea">
+        <input id="txtSearch" type="text" class="form-control" />
+    </div>
+    <div class="col-md-8 searchBtnArea">
+        <input type="button" id="btnSearch" class="btn btn-info" value="Search" onclick="CurrentPage.Search();">
+        <div class="searchMsg small">
+            Search StateCode or Name.
+        </div>
+    </div>
+</div>
+
+<table id="tblStates" class="table table-hover">
+    <thead>
+        <tr>
+            <th onclick="CurrentPage.Sort(0)">StateCode</th>
+            <th onclick="CurrentPage.Sort(1)">State Description</th>
+
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var state in Model)
+        {
+            <tr>
+                <td>@state.StateCode</td>
+                <td>@state.StateName</td>
+
+                <td>
+                    <a href="/States/Upsert/@state.StateCode">Edit</a>
+                    <a href="#" onclick="api.DELETE('/States/Delete/@state.StateCode')">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script>
+    window.onload = function () {
+        CurrentPage.baseUrl = '/States/All/';
+    }
+</script>

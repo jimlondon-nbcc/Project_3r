@@ -1,0 +1,39 @@
+﻿@model Project_3r.Models.State
+@{
+    ViewBag.Title = "Add or Edit State";
+}
+
+<h2>Add or Edit State</h2>
+
+@using (Html.BeginForm("Upsert", "States", FormMethod.Post))
+{
+    <p>
+        Please add or edit the state information below. When you are finished, click the Submit button to
+        save.
+    </p>
+    <div class="formArea">
+        <div class="row">
+            <div class="col-md-3">
+                <span>State Code</span>
+            </div>
+            <div class="col-md-9">
+                @Html.TextBoxFor(p => p.StateCode, new { @class = "form-control required" })
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <span>State Name</span>
+            </div>
+            <div class="col-md-9">
+                @Html.TextBoxFor(p => p.StateName, new { @class = "form-control required" })
+            </div>
+        </div>
+
+
+    </div>
+
+    <input type="submit" value="Submit" class="btn btn-info" onclick="return CurrentPage.Check()" />
+}
+<p class="caution">
+    Note: All fields must be filled, or the state will not be saved.
+</p>
